@@ -52,7 +52,7 @@ const Navbar = () => {
         <button
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMobileMenuOpen((prev) => !prev)}
-          className="text-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+          className="text-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 "
         >
           {mobileMenuOpen ? <FiX /> : <FiMenu />}
         </button>
@@ -62,7 +62,7 @@ const Navbar = () => {
           className="text-lg font-bold tracking-wide"
           aria-label="Homepage"
         >
-          SHAREEANA
+          SHARIYANA by Shahida
         </a>
 
         <div className="relative group">
@@ -227,7 +227,8 @@ const Navbar = () => {
           className="text-lg md:text-xl font-bold tracking-wide"
           aria-label="Homepage"
         >
-          SHAREEANA
+          SHARIYANA <span className="text-sm italic text-gray-600">by</span>
+          <span className="text-gray-600 font-thin"> Shahida</span>
         </a>
 
         {/* Icons */}

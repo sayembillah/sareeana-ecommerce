@@ -51,13 +51,13 @@ const FilterSidebar = ({ onClose }) => (
           <input
             type="number"
             placeholder="Min"
-            className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
+            className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none"
           />
           <span className="text-gray-500">-</span>
           <input
             type="number"
             placeholder="Max"
-            className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
+            className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none"
           />
         </div>
         <button
