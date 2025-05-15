@@ -1,5 +1,4 @@
-// src/components/ProductPreview.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import p1 from "/product-image/p1.jpg";
 import { IoClose } from "react-icons/io5";
 
@@ -7,12 +6,35 @@ const ProductPreview = ({ onClose }) => {
   const thumbnails = [p1, p1, p1, p1, p1];
   const [selectedImage, setSelectedImage] = useState(thumbnails[0]);
 
+  // Transition state
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Trigger animation after mount
+    setTimeout(() => setIsVisible(true), 10);
+  }, []);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    // Wait for animation to finish
+    setTimeout(onClose, 200);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white rounded-lg max-w-3xl w-full p-6 relative overflow-y-auto max-h-[90vh]">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`bg-white rounded-lg max-w-3xl w-full p-6 relative overflow-y-auto max-h-[90vh] transform transition-all duration-300 ${
+          isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
+      >
+        {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-black"
-          onClick={onClose}
+          onClick={handleClose}
         >
           <IoClose size={24} />
         </button>
@@ -36,7 +58,9 @@ const ProductPreview = ({ onClose }) => {
                 <button
                   key={index}
                   className={`min-w-[60px] w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImage === img ? "border-black" : "border-gray-200"
+                    selectedImage === img
+                      ? "border-black"
+                      : "border-gray-200 hover:border-gray-400"
                   }`}
                   onClick={() => setSelectedImage(img)}
                 >
