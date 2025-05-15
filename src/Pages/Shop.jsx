@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CollectionItem from "../CollectionItem";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import ProductPreview from "../components/ProductPreview";
 
 const FilterSection = ({ title, children }) => {
   const [open, setOpen] = useState(true);
@@ -138,6 +139,7 @@ const FilterSidebar = ({ onClose }) => (
 
 const Shop = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     if (showMobileFilters) {
@@ -169,7 +171,7 @@ const Shop = () => {
         <div className="flex-1 p-4 md:p-6 overflow-y-auto">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 50 }).map((_, i) => (
-              <CollectionItem key={i} />
+              <CollectionItem key={i} onPreview={() => setShowPreview(true)} />
             ))}
           </div>
           <div className="text-center mt-8 text-gray-400">
@@ -182,7 +184,7 @@ const Shop = () => {
       <div className="block md:hidden p-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
           {Array.from({ length: 50 }).map((_, i) => (
-            <CollectionItem key={i} />
+            <CollectionItem key={i} onPreview={() => setShowPreview(true)} />
           ))}
         </div>
         <div className="text-center mt-8 text-gray-400">
@@ -206,6 +208,7 @@ const Shop = () => {
       >
         <FilterSidebar onClose={() => setShowMobileFilters(false)} />
       </div>
+      {showPreview && <ProductPreview onClose={() => setShowPreview(false)} />}
     </div>
   );
 };

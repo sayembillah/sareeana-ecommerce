@@ -3,7 +3,7 @@ import productImage from "/product-image/p1.jpg";
 import { FaRegHeart, FaEye } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 
-const CollectionItem = () => {
+const CollectionItem = ({ onPreview }) => {
   return (
     <div className="relative w-full group rounded overflow-hidden shadow-sm bg-white transition duration-300">
       {/* Image & Heart Icon */}
@@ -27,6 +27,7 @@ const CollectionItem = () => {
             <FaEye
               size={18}
               className="text-white hover:scale-110 transition cursor-pointer"
+              onClick={onPreview}
             />
           </div>
         </div>
