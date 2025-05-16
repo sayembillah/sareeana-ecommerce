@@ -5,10 +5,10 @@ import { IoCartOutline } from "react-icons/io5";
 import { Outlet } from "react-router-dom";
 
 const categories = [
-  { name: "Silk", href: "#" },
-  { name: "Georgette", href: "#" },
-  { name: "Cotton", href: "#" },
-  { name: "Organza", href: "#" },
+  { name: "Home", href: "#" },
+  { name: "Shop", href: "#" },
+  { name: "About", href: "#" },
+  { name: "FAQ", href: "#" },
 ];
 
 const moreCategories = [
@@ -109,13 +109,13 @@ const Navbar = () => {
                 </li>
               ))}
 
-              {/* Dropdown for More */}
+              {/* Dropdown for Categories */}
               <li ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setDropdownOpen((prev) => !prev)}
                   className="flex items-center justify-between w-full hover:text-gray-600 focus:outline-none"
                 >
-                  More
+                  Categories
                   <svg
                     className={`ml-2 h-4 w-4 transition-transform duration-200 ${
                       dropdownOpen ? "rotate-180" : ""
@@ -214,7 +214,7 @@ const Navbar = () => {
               onBlur={() => setDropdownOpen(false)}
             >
               <span className="hover:text-gray-600 select-none flex items-center">
-                More
+                Categories
                 <svg
                   className={`ml-1 h-4 w-4 transition-transform duration-200 ${
                     dropdownOpen ? "rotate-180" : ""
