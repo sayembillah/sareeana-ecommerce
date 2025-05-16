@@ -21,6 +21,27 @@ const moreCategories = [
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userDropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setUserDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const dropdownRef = useRef(null);
 
   // Close dropdown if click outside
@@ -66,16 +87,10 @@ const Navbar = () => {
             SHARIYANA by Shahida
           </a>
 
-          <div className="relative group">
-            <FaRegUser
-              className="text-xl cursor-pointer hover:text-blue-600"
-              aria-label="User account"
-              tabIndex={0}
-            />
-            <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1 text-xs bg-gray-800 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none select-none">
-              Account
-            </span>
-          </div>
+          <IoCartOutline
+            className="text-2xl hover:text-blue-600 cursor-pointer"
+            aria-label="Cart"
+          />
         </div>
 
         {/* Mobile Menu Drawer */}
@@ -94,14 +109,8 @@ const Navbar = () => {
                 </li>
               ))}
 
-              <li
-                ref={dropdownRef}
-                tabIndex={0}
-                aria-haspopup="true"
-                aria-expanded={dropdownOpen}
-                onKeyDown={handleDropdownKey}
-                className="relative"
-              >
+              {/* Dropdown for More */}
+              <li ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setDropdownOpen((prev) => !prev)}
                   className="flex items-center justify-between w-full hover:text-gray-600 focus:outline-none"
@@ -115,7 +124,6 @@ const Navbar = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -143,6 +151,33 @@ const Navbar = () => {
                     ))}
                   </ul>
                 )}
+              </li>
+
+              {/* Divider */}
+              <hr className="my-2 border-gray-300" />
+
+              {/* Account Section */}
+              <li>
+                <span className="text-gray-500 text-xs uppercase">Account</span>
+                <ul className="ml-4 space-y-2 mt-1">
+                  <li>
+                    <a href="/signin" className="block hover:text-gray-600">
+                      Sign In
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/signup" className="block hover:text-gray-600">
+                      Sign Up
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Wishlist */}
+              <li>
+                <a href="/wishlist" className="block hover:text-gray-600">
+                  Wishlist
+                </a>
               </li>
             </ul>
           </div>
@@ -234,16 +269,49 @@ const Navbar = () => {
 
           {/* Icons */}
           <ul className="flex gap-6 text-xl">
-            <li className="relative group">
-              <FaRegUser
-                className="cursor-pointer hover:text-blue-600"
+            <li
+              className="relative"
+              ref={userDropdownRef}
+              tabIndex={0}
+              aria-haspopup="true"
+              aria-expanded={userDropdownOpen}
+            >
+              <button
+                onClick={() => setUserDropdownOpen((prev) => !prev)}
+                className="text-xl hover:text-blue-600 focus:outline-none"
                 aria-label="User account"
-                tabIndex={0}
-              />
+              >
+                <FaRegUser />
+              </button>
+
               <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1 text-xs bg-gray-800 text-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none select-none">
                 Account
               </span>
+
+              {userDropdownOpen && (
+                <ul className="absolute top-full right-0 mt-2 w-36 bg-white shadow-lg rounded-lg border border-gray-200 z-10">
+                  <li>
+                    <a
+                      href="/signin"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      Sign In
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/signup"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      Sign Up
+                    </a>
+                  </li>
+                </ul>
+              )}
             </li>
+
             <li className="relative group">
               <FaRegHeart
                 className="cursor-pointer hover:text-blue-600"
