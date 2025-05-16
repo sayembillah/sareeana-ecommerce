@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import p1 from "/product-image/p1.jpg";
 import { IoClose } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const ProductPreview = ({ onClose }) => {
   const thumbnails = [p1, p1, p1, p1, p1];
@@ -101,6 +102,12 @@ const ProductPreview = ({ onClose }) => {
               <button className="text-red-500 text-lg hover:text-red-600 transition">
                 ♥
               </button>
+              <Link
+                to="/product/1"
+                className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition text-sm flex items-center justify-center"
+              >
+                View Product
+              </Link>
             </div>
           </div>
         </div>

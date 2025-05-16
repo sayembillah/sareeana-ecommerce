@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaRegHeart, FaRegUser } from "react-icons/fa6";
 import { FiMenu, FiX } from "react-icons/fi";
 import { IoCartOutline } from "react-icons/io5";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
 const categories = [
-  { name: "Home", href: "#" },
-  { name: "Shop", href: "#" },
-  { name: "About", href: "#" },
-  { name: "FAQ", href: "#" },
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+  { name: "About", href: "/about" },
+  { name: "FAQ", href: "/faq" },
 ];
 
 const moreCategories = [
@@ -24,6 +24,8 @@ const Navbar = () => {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const userDropdownRef = useRef(null);
 
+  const dropdownRef = useRef(null);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -38,19 +40,6 @@ const Navbar = () => {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const dropdownRef = useRef(null);
-
-  // Close dropdown if click outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -99,13 +88,13 @@ const Navbar = () => {
             <ul className="flex flex-col space-y-3 px-6 py-4 text-sm font-medium">
               {categories.map((cat) => (
                 <li key={cat.name}>
-                  <a
-                    href={cat.href}
+                  <Link
+                    to={cat.href}
                     className="block hover:text-gray-600"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {cat.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
 
@@ -198,7 +187,7 @@ const Navbar = () => {
                 role="menuitem"
                 tabIndex={0}
               >
-                <a href={cat.href}>{cat.name}</a>
+                <Link to={cat.href}>{cat.name}</Link>
               </li>
             ))}
 
@@ -291,22 +280,22 @@ const Navbar = () => {
               {userDropdownOpen && (
                 <ul className="absolute top-full right-0 mt-2 w-36 bg-white shadow-lg rounded-lg border border-gray-200 z-10">
                   <li>
-                    <a
-                      href="/signin"
+                    <Link
+                      to="/signin"
                       onClick={() => setUserDropdownOpen(false)}
                       className="block px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       Sign In
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="/signup"
+                    <Link
+                      to="/signup"
                       onClick={() => setUserDropdownOpen(false)}
                       className="block px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       Sign Up
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               )}
