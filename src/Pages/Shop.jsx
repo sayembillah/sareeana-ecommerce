@@ -34,109 +34,134 @@ const FilterSection = ({ title, children }) => {
   );
 };
 
-const FilterSidebar = ({ onClose }) => (
-  <div className="w-full md:w-[260px] bg-white p-4 md:p-6 text-sm">
-    {/* Mobile Close Button */}
-    {onClose && (
-      <div className="flex justify-between items-center mb-4 sm:hidden">
-        <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
-        <button onClick={onClose}>
-          <IoClose size={24} />
-        </button>
-      </div>
-    )}
-
-    {/* Actual Filters */}
-    <FilterSection title="Price Range">
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <input
-            type="number"
-            placeholder="Min"
-            className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none"
-          />
-          <span className="text-gray-500">-</span>
-          <input
-            type="number"
-            placeholder="Max"
-            className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none"
-          />
+const FilterSidebar = ({ onClose }) => {
+  const [isCategorySelected, setIsCateorySelected] = useState([]);
+  return (
+    <div className="w-full md:w-[260px] bg-white p-4 md:p-6 text-sm">
+      {/* Mobile Close Button */}
+      {onClose && (
+        <div className="flex justify-between items-center mb-4 sm:hidden">
+          <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
+          <button onClick={onClose}>
+            <IoClose size={24} />
+          </button>
         </div>
-        <button
-          className="bg-black text-white rounded-md py-1.5 text-sm hover:bg-gray-900 transition"
-          onClick={() => {
-            console.log("Filter products based on price");
-          }}
-        >
-          Show
-        </button>
-      </div>
-    </FilterSection>
+      )}
 
-    <hr className="my-4 border-gray-200" />
+      {/* Actual Filters */}
 
-    <FilterSection title="Category">
-      <div className="space-y-2">
-        {["All Products", "Silk", "Georgette", "Organza", "Cotton"].map(
-          (cat, index) => (
+      {/* Price Range */}
+      <FilterSection title="Price Range">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              placeholder="Min"
+              className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none"
+            />
+            <span className="text-gray-500">-</span>
+            <input
+              type="number"
+              placeholder="Max"
+              className="w-full border border-gray-300 px-2 py-1.5 rounded-md focus:outline-none"
+            />
+          </div>
+          <button
+            className="bg-black text-white rounded-md py-1.5 text-sm hover:bg-gray-900 transition"
+            onClick={() => {
+              console.log("Filter products based on price");
+            }}
+          >
+            Show
+          </button>
+        </div>
+      </FilterSection>
+
+      <hr className="my-4 border-gray-200" />
+
+      {/* Category */}
+      <FilterSection title="Category">
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isCategorySelected.length === 0}
+              className="accent-black"
+              value="All Products"
+              onClick={(e) => e.target.checked && setIsCateorySelected([])}
+            />
+            <span className="text-gray-700">All Products</span>
+          </label>
+          {["Silk", "Georgette", "Organza", "Cotton"].map((cat) => (
             <label key={cat} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                defaultChecked={index === 0}
                 className="accent-black"
+                value={cat}
+                checked={isCategorySelected.includes(cat)}
+                onClick={(e) => {
+                  const { value, checked } = e.target;
+                  checked
+                    ? setIsCateorySelected((prev) => [...prev, value])
+                    : setIsCateorySelected((prev) =>
+                        prev.filter((item) => item !== value)
+                      );
+                }}
               />
               <span className="text-gray-700">{cat}</span>
             </label>
-          )
-        )}
-      </div>
-    </FilterSection>
+          ))}
+        </div>
+      </FilterSection>
 
-    <hr className="my-4 border-gray-200" />
+      <hr className="my-4 border-gray-200" />
 
-    <FilterSection title="Availability">
-      <div className="space-y-2">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" className="accent-black" />
-          <span className="text-gray-700">In Stock</span>
-        </label>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" className="accent-black" />
-          <span className="text-gray-700">Out of Stock</span>
-        </label>
-      </div>
-    </FilterSection>
-
-    <hr className="my-4 border-gray-200" />
-
-    <FilterSection title="Sort By">
-      <div className="space-y-2">
-        {[
-          "Featured",
-          "Best Selling",
-          "Best Rated",
-          "Price: High to Low",
-          "Price: Low to High",
-          "Latest to Oldest",
-          "Oldest to Latest",
-        ].map((option, idx) => (
-          <label
-            key={option}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <input
-              type="radio"
-              name="sort"
-              defaultChecked={idx === 0}
-              className="accent-black"
-            />
-            <span className="text-gray-700">{option}</span>
+      {/* Availability */}
+      <FilterSection title="Availability">
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" className="accent-black" />
+            <span className="text-gray-700">In Stock</span>
           </label>
-        ))}
-      </div>
-    </FilterSection>
-  </div>
-);
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" className="accent-black" />
+            <span className="text-gray-700">Out of Stock</span>
+          </label>
+        </div>
+      </FilterSection>
+
+      <hr className="my-4 border-gray-200" />
+
+      {/* Sort By */}
+      <FilterSection title="Sort By">
+        <div className="space-y-2">
+          {[
+            "Featured",
+            "Best Selling",
+            "Best Rated",
+            "Price: High to Low",
+            "Price: Low to High",
+            "Latest to Oldest",
+            "Oldest to Latest",
+          ].map((option, idx) => (
+            <label
+              key={option}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="sort"
+                defaultChecked={idx === 0}
+                className="accent-black"
+              />
+              <span className="text-gray-700">{option}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+    </div>
+  );
+};
 
 const Shop = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);

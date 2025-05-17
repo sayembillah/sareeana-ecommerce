@@ -34,6 +34,7 @@ const Collection = ({ title, list }) => {
 
       <div className="w-full max-w-7xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* slice used for filtering top 4 product */}
           {list.slice(0, 4).map((item) => (
             <CollectionItem
               key={item.id}
