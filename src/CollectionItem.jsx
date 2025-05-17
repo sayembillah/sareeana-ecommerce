@@ -1,9 +1,8 @@
-import React from "react";
-import productImage from "/product-image/p1.jpg";
-import { FaRegHeart, FaEye } from "react-icons/fa";
+import { FaEye, FaRegHeart } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
+import productImage from "/product-image/p1.jpg";
 
-const CollectionItem = ({ onPreview, list }) => {
+const CollectionItem = ({ onPreview, product }) => {
   return (
     <div className="relative w-full group rounded overflow-hidden shadow-sm bg-white transition duration-300">
       {/* Image & Heart Icon */}
@@ -35,8 +34,8 @@ const CollectionItem = ({ onPreview, list }) => {
 
       {/* Product Info */}
       <div className="p-4 text-center">
-        <p className="font-semibold text-base">Premium Indian Silk Saree</p>
-        <p className="text-gray-500 text-sm">BDT 1500</p>
+        <p className="font-semibold text-base">{product.name}</p>
+        <p className="text-gray-500 text-sm">{`BDT ${product.price}`}</p>
       </div>
     </div>
   );

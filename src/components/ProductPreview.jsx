@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import p1 from "/product-image/p1.jpg";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import p1 from "/product-image/p1.jpg";
 
-const ProductPreview = ({ onClose }) => {
+const ProductPreview = ({ onClose, product }) => {
   const thumbnails = [p1, p1, p1, p1, p1];
   const [selectedImage, setSelectedImage] = useState(thumbnails[0]);
 
@@ -78,17 +78,16 @@ const ProductPreview = ({ onClose }) => {
           {/* Right: Info */}
           <div className="w-full md:w-1/2">
             <h2 className="text-xl font-semibold text-gray-800 mb-1">
-              Premium Indian Silk Saree
+              {product.name}
             </h2>
-            <p className="text-2xl font-bold text-black mb-3">BDT 1500</p>
+            <p className="text-2xl font-bold text-black mb-3">{`BDT ${product.price}`}</p>
 
             <p className="mb-1">
-              <span className="font-semibold">Fabric:</span> Silk
+              <span className="font-semibold">Fabric:</span> {product.faric}
             </p>
             <p className="mb-4 text-gray-700 text-sm">
-              <span className="font-semibold">Description:</span> Lorem ipsum
-              dolor sit amet, consectetur adipisicing elit. Esse quod corrupti,
-              fuga possimus quibusdam tempora.
+              <span className="font-semibold">Description:</span>{" "}
+              {product.description}
             </p>
 
             {/* Action Buttons */}
