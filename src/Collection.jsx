@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CollectionItem from "./CollectionItem";
 import ProductPreview from "./components//ProductPreview"; // Make sure it's imported
 
-const Collection = ({ title }) => {
+const Collection = ({ title, list }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -38,6 +38,7 @@ const Collection = ({ title }) => {
             <CollectionItem
               key={i}
               onPreview={() => handlePreviewOpen(dummyProduct)}
+              list={list}
             />
           ))}
         </div>

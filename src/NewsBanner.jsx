@@ -23,7 +23,6 @@ const NewsBanner = () => {
   return (
     <div className="m-0 p-0">
       <img src={banners[currentPicture]} />
-      {console.log(banner1)}
     </div>
   );
 };
