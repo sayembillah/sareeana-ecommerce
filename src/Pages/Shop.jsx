@@ -4,7 +4,6 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import CollectionItem from "../CollectionItem";
 import ProductPreview from "../components/ProductPreview";
-
 const FilterSection = ({ title, children }) => {
   const [open, setOpen] = useState(true);
 
@@ -34,8 +33,11 @@ const FilterSection = ({ title, children }) => {
   );
 };
 
-const FilterSidebar = ({ onClose }) => {
+const FilterSidebar = ({ onClose, filterProduct }) => {
   const [isCategorySelected, setIsCateorySelected] = useState([]);
+  useEffect(() => {
+    filterProduct(isCategorySelected);
+  }, [isCategorySelected]);
   return (
     <div className="w-full md:w-[260px] bg-white p-4 md:p-6 text-sm">
       {/* Mobile Close Button */}
@@ -88,7 +90,7 @@ const FilterSidebar = ({ onClose }) => {
               checked={isCategorySelected.length === 0}
               className="accent-black"
               value="All Products"
-              onClick={(e) => e.target.checked && setIsCateorySelected([])}
+              onChange={(e) => e.target.checked && setIsCateorySelected([])}
             />
             <span className="text-gray-700">All Products</span>
           </label>
@@ -99,7 +101,7 @@ const FilterSidebar = ({ onClose }) => {
                 className="accent-black"
                 value={cat}
                 checked={isCategorySelected.includes(cat)}
-                onClick={(e) => {
+                onChange={(e) => {
                   const { value, checked } = e.target;
                   checked
                     ? setIsCateorySelected((prev) => [...prev, value])
@@ -166,14 +168,30 @@ const FilterSidebar = ({ onClose }) => {
 const Shop = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [previewProduct, setPreviewProduct] = useState(null);
+  const [productToDisplay, setProductToDisplay] = useState([]); //this state shows those product whose category are on the selected array
   const [productData, setProductData] = useState([]);
+
+  function filterProduct(category) {
+    if (category.length) {
+      const filteredProduct = productData.filter((product) =>
+        category.includes(product.category)
+      );
+      setProductToDisplay(filteredProduct);
+    } else {
+      setProductToDisplay(productData);
+    }
+  }
+
+  console.log(productToDisplay);
 
   useEffect(() => {
     async function getProducts() {
       const { data } = await axios.get("http://localhost:3000/products");
       setProductData(data);
+      productToDisplay.length || setProductToDisplay(data);
     }
     getProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -201,11 +219,11 @@ const Shop = () => {
       {/* Desktop layout */}
       <div className="hidden md:flex md:flex-row flex-grow">
         <div className="w-[260px] border-r border-gray-200 shrink-0">
-          <FilterSidebar />
+          <FilterSidebar filterProduct={filterProduct} />
         </div>
         <div className="flex-1 p-4 md:p-6 overflow-y-auto">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {productData.map((item) => (
+            {productToDisplay.map((item) => (
               <CollectionItem
                 key={item.id}
                 product={item}
@@ -222,7 +240,7 @@ const Shop = () => {
       {/* Mobile product grid (shown only on small screens) */}
       <div className="block md:hidden p-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
-          {productData.map((item) => (
+          {productToDisplay.map((item) => (
             <CollectionItem
               key={item.id}
               product={item}
@@ -249,7 +267,10 @@ const Shop = () => {
           showMobileFilters ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <FilterSidebar onClose={() => setShowMobileFilters(false)} />
+        <FilterSidebar
+          filterProduct={filterProduct}
+          onClose={() => setShowMobileFilters(false)}
+        />
       </div>
       {previewProduct && (
         <ProductPreview
