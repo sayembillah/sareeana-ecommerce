@@ -70,25 +70,8 @@ const FilterSidebar = ({
   setMinPrice, // Function to set min price
   minPrice, // Minimum price
   maxPrice, // Maximum price
-  filteredProducts,
-  setFilteredProducts,
 }) => {
-  // function to apply the price filter and update currently displayed producrs
-  const applyPriceFilter = () => {
-    const min = parseFloat(minPrice);
-    const max = parseFloat(maxPrice);
-
-    const priceFiltered = filteredProducts.filter((product) => {
-      const price = product.price;
-
-      const withinMin = isNaN(min) || price >= min;
-      const withinMax = isNaN(max) || price <= max;
-
-      return withinMin && withinMax;
-    });
-
-    setFilteredProducts(priceFiltered);
-  };
+  // FilterSidebar only handles UI and state updates for filters; filtering logic is in Shop component
 
   return (
     <div className="w-full md:w-[260px] bg-white p-4 md:p-6 text-sm">
@@ -123,19 +106,21 @@ const FilterSidebar = ({
               onChange={(e) => setMaxPrice(e.target.value)}
             />
           </div>
-          {/* Button to apply price filter (logs to console for now) */}
+          {/* Button to apply price filter */}
           <button
             className="bg-black text-white rounded-md py-1.5 text-sm hover:bg-gray-900"
-            onClick={applyPriceFilter}
+            onClick={() => {
+              // Filtering is reactive to minPrice and maxPrice changes in Shop component
+            }}
           >
             Show
           </button>
           <button
             className="bg-black text-white rounded-md py-1.5 text-sm hover:bg-gray-900"
             onClick={() => {
-              setMinPrice(0);
-              setMaxPrice(10000);
-              setFilteredProducts(filteredProducts);
+              // Clear price filters and reset to default values
+              setMinPrice("");
+              setMaxPrice("");
             }}
           >
             Clear
@@ -230,28 +215,41 @@ const Shop = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   // State to store selected categories for filtering
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [maxPrice, setMaxPrice] = useState(0);
-  const [minPrice, setMinPrice] = useState(0);
+  // Initialize minPrice and maxPrice as empty strings to indicate no price filtering initially
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("");
 
-  // Function to filter products based on selected categories
+  // Function to filter products based on selected categories and price range
   const filterProduct = useCallback(() => {
-    if (selectedCategories.length === 0) {
-      // If no categories are selected, show all products
-      setFilteredProducts(productData);
-    } else {
-      // Filter products to only those in selected categories
-      const filtered = productData.filter((p) =>
-        selectedCategories.includes(p.category)
-      );
-      setFilteredProducts(filtered);
-    }
-  }, [productData, selectedCategories]); // Dependencies for useCallback
+    // Parse minPrice and maxPrice; treat empty string as no filter
+    const min = minPrice === "" ? NaN : parseFloat(minPrice);
+    const max = maxPrice === "" ? NaN : parseFloat(maxPrice);
+
+    // Filter products by category if any selected, else all
+    let filtered =
+      selectedCategories.length === 0
+        ? productData
+        : productData.filter((p) => selectedCategories.includes(p.category));
+
+    // Further filter products by price range
+    filtered = filtered.filter((product) => {
+      const price = product.price;
+      const withinMin = isNaN(min) || price >= min;
+      const withinMax = isNaN(max) || price <= max;
+      return withinMin && withinMax;
+    });
+
+    setFilteredProducts(filtered);
+  }, [productData, selectedCategories, minPrice, maxPrice]); // Dependencies for useCallback
 
   // Fetch products from API when component mounts
   useEffect(() => {
     axios.get("http://localhost:3000/products").then(({ data }) => {
       setProductData(data); // Store all products
       setFilteredProducts(data); // Initialize filtered products
+      // Initialize minPrice and maxPrice as empty strings (no price filter)
+      setMinPrice("");
+      setMaxPrice("");
     });
   }, []); // Empty dependency array means this runs once on mount
 
@@ -259,6 +257,11 @@ const Shop = () => {
   useEffect(() => {
     filterProduct();
   }, [selectedCategories, filterProduct]); // Runs when selectedCategories or filterProduct changes
+
+  // Add useEffect to run filterProduct when minPrice or maxPrice changes
+  useEffect(() => {
+    filterProduct();
+  }, [minPrice, maxPrice, filterProduct]);
 
   // Toggle body overflow to prevent scrolling when mobile filters are open
   useEffect(() => {
@@ -304,8 +307,6 @@ const Shop = () => {
             setMinPrice={setMinPrice}
             maxPrice={maxPrice}
             minPrice={minPrice}
-            filteredProducts={filteredProducts}
-            setFilteredProducts={setFilteredProducts}
           />
         </div>
         {/* Main content area with product grid */}
