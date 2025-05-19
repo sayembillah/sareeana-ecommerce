@@ -66,7 +66,30 @@ const FilterSidebar = ({
   onClose, // Function to close the mobile sidebar (optional, used in mobile view)
   selectedCategories, // Array of currently selected categories
   setSelectedCategories, // Function to update selected categories
+  setMaxPrice, // Function to set max price
+  setMinPrice, // Function to set min price
+  minPrice, // Minimum price
+  maxPrice, // Maximum price
+  filteredProducts,
+  setFilteredProducts,
 }) => {
+  // function to apply the price filter and update currently displayed producrs
+  const applyPriceFilter = () => {
+    const min = parseFloat(minPrice);
+    const max = parseFloat(maxPrice);
+
+    const priceFiltered = filteredProducts.filter((product) => {
+      const price = product.price;
+
+      const withinMin = isNaN(min) || price >= min;
+      const withinMax = isNaN(max) || price <= max;
+
+      return withinMin && withinMax;
+    });
+
+    setFilteredProducts(priceFiltered);
+  };
+
   return (
     <div className="w-full md:w-[260px] bg-white p-4 md:p-6 text-sm">
       {/* Mobile-only header with close button */}
@@ -87,6 +110,8 @@ const FilterSidebar = ({
               type="number"
               placeholder="Min"
               className="w-full border px-2 py-1.5 rounded-md"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
             />
             <span className="text-gray-500">-</span> {/* Separator */}
             {/* Input for maximum price */}
@@ -94,14 +119,26 @@ const FilterSidebar = ({
               type="number"
               placeholder="Max"
               className="w-full border px-2 py-1.5 rounded-md"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
             />
           </div>
           {/* Button to apply price filter (logs to console for now) */}
           <button
             className="bg-black text-white rounded-md py-1.5 text-sm hover:bg-gray-900"
-            onClick={() => console.log("Filter products based on price")}
+            onClick={applyPriceFilter}
           >
             Show
+          </button>
+          <button
+            className="bg-black text-white rounded-md py-1.5 text-sm hover:bg-gray-900"
+            onClick={() => {
+              setMinPrice(0);
+              setMaxPrice(10000);
+              setFilteredProducts(filteredProducts);
+            }}
+          >
+            Clear
           </button>
         </div>
       </FilterSection>
@@ -193,6 +230,8 @@ const Shop = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   // State to store selected categories for filtering
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState(0);
 
   // Function to filter products based on selected categories
   const filterProduct = useCallback(() => {
@@ -261,6 +300,12 @@ const Shop = () => {
           <FilterSidebar
             selectedCategories={selectedCategories}
             setSelectedCategories={setSelectedCategories}
+            setMaxPrice={setMaxPrice}
+            setMinPrice={setMinPrice}
+            maxPrice={maxPrice}
+            minPrice={minPrice}
+            filteredProducts={filteredProducts}
+            setFilteredProducts={setFilteredProducts}
           />
         </div>
         {/* Main content area with product grid */}
